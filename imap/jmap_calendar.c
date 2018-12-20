@@ -240,8 +240,8 @@ static int getcalendars_cb(const mbentry_t *mbentry, void *vrock)
     static const char *calcompset_annot =
         DAV_ANNOT_NS "<" XML_NS_CALDAV ">supported-calendar-component-set";
     unsigned long supported_components = -1; /* ALL component types by default. */
-    r = annotatemore_lookupmask(mbentry->name, calcompset_annot,
-                                rock->req->accountid, &attrib);
+    r = annotatemore_lookupmask_mbe(mbentry, calcompset_annot,
+                                    rock->req->accountid, &attrib);
     if (attrib.len) {
         supported_components = strtoul(buf_cstring(&attrib), NULL, 10);
         buf_free(&attrib);
@@ -276,8 +276,8 @@ static int getcalendars_cb(const mbentry_t *mbentry, void *vrock)
         buf_reset(&attrib);
         static const char *displayname_annot =
             DAV_ANNOT_NS "<" XML_NS_DAV ">displayname";
-        r = annotatemore_lookupmask(mbentry->name, displayname_annot,
-                                    httpd_userid, &attrib);
+        r = annotatemore_lookupmask_mbe(mbentry, displayname_annot,
+                                        httpd_userid, &attrib);
         /* fall back to last part of mailbox name */
         if (r || !attrib.len) buf_setcstr(&attrib, id);
         json_object_set_new(obj, "name", json_string(buf_cstring(&attrib)));
@@ -288,9 +288,9 @@ static int getcalendars_cb(const mbentry_t *mbentry, void *vrock)
         struct buf attrib = BUF_INITIALIZER;
         static const char *color_annot =
             DAV_ANNOT_NS "<" XML_NS_APPLE ">calendar-color";
-        r = annotatemore_lookupmask(mbentry->name, color_annot,
-                                    httpd_userid, &attrib);
-        if (buf_len(&attrib))
+        r = annotatemore_lookupmask_mbe(mbentry, color_annot,
+                                        httpd_userid, &attrib);
+        if (!r && attrib.len)
             json_object_set_new(obj, "color", json_string(buf_cstring(&attrib)));
         buf_free(&attrib);
     }
@@ -300,8 +300,8 @@ static int getcalendars_cb(const mbentry_t *mbentry, void *vrock)
         buf_reset(&attrib);
         static const char *order_annot =
             DAV_ANNOT_NS "<" XML_NS_APPLE ">calendar-order";
-        r = annotatemore_lookupmask(mbentry->name, order_annot,
-                                    httpd_userid, &attrib);
+        r = annotatemore_lookupmask_mbe(mbentry, order_annot,
+                                        httpd_userid, &attrib);
         if (!r && attrib.len) {
             char *ptr;
             long val = strtol(buf_cstring(&attrib), &ptr, 10);
@@ -323,8 +323,8 @@ static int getcalendars_cb(const mbentry_t *mbentry, void *vrock)
         buf_reset(&attrib);
         static const char *color_annot =
             DAV_ANNOT_NS "<" XML_NS_CALDAV ">X-FM-isVisible";
-        r = annotatemore_lookupmask(mbentry->name, color_annot,
-                                    httpd_userid, &attrib);
+        r = annotatemore_lookupmask_mbe(mbentry, color_annot,
+                                        httpd_userid, &attrib);
         if (!r && attrib.len) {
             const char *val = buf_cstring(&attrib);
             if (!strncmp(val, "true", 4) || !strncmp(val, "1", 1)) {
@@ -362,8 +362,8 @@ static int getcalendars_cb(const mbentry_t *mbentry, void *vrock)
                 buf_reset(&attrib);
                 static const char *invite_annot =
                     DAV_ANNOT_NS "<" XML_NS_DAV ">invite-status";
-                r = annotatemore_lookupmask(mbentry->name, invite_annot,
-                                            httpd_userid, &attrib);
+                r = annotatemore_lookupmask_mbe(mbentry, invite_annot,
+                                                httpd_userid, &attrib);
                 if (!strcmp(buf_cstring(&attrib), "invite-accepted")) {
                     is_subscribed = 1;
                 }
@@ -671,8 +671,8 @@ static int getcalendarchanges_cb(const mbentry_t *mbentry, void *vrock)
     static const char *calcompset_annot =
         DAV_ANNOT_NS "<" XML_NS_CALDAV ">supported-calendar-component-set";
     unsigned long supported_components = -1; /* ALL component types by default. */
-    r = annotatemore_lookupmask(mbentry->name, calcompset_annot,
-                                rock->req->accountid, &attrib);
+    r = annotatemore_lookupmask_mbe(mbentry, calcompset_annot,
+                                    rock->req->accountid, &attrib);
     if (attrib.len) {
         supported_components = strtoul(buf_cstring(&attrib), NULL, 10);
         buf_free(&attrib);
