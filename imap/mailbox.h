@@ -251,7 +251,6 @@ struct mailbox {
     uint32_t mbtype;
     char *part;
     char *acl;
-    int legacy_dir;
 
     struct index_header i;
 
