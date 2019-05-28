@@ -1790,7 +1790,7 @@ static json_t *jmap_contact_from_vcard(struct vparse_card *card,
 
     const char *annot = DAV_ANNOT_NS "<" XML_NS_CYRUS ">importance";
     buf_reset(&buf);
-    annotatemore_msg_lookup(mailbox->name, record->uid, annot, "", &buf);
+    annotatemore_msg_lookup(mailbox, record->uid, annot, "", &buf);
     double val = 0;
     if (buf.len) val = strtod(buf_cstring(&buf), NULL);
 
