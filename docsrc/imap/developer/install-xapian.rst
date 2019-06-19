@@ -35,7 +35,18 @@ command line.
     cd cyruslibs
     sh build.sh $CYRUSLIBS_DIR
 
-Then follow on with the Cyrus :ref:`compilation instructions <compiling>`, adding ``--enable-xapian`` to the flags to ``./configure``.
+After that, you need to compile the rest of the actual `xapian` binaries as that is not included in the `build.sh` script. 
+
+
+.. code-block:: bash
+    cd xapian
+    ./bootstrap
+    ./configure --prefix=$CYRUSLIBS
+    make
+    make install
+    make check
+
+Finally, follow on with the Cyrus :ref:`compilation instructions <compiling>`, adding ``--enable-xapian`` to the flags to ``./configure``.
 
 Additional dependencies required for Cyrus with Xapian support
 ==============================================================
